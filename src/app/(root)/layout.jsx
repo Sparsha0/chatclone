@@ -24,8 +24,8 @@ const layout = async({children}) =>{
             <ChatSidebar user={user}/>
             <main className="flex-1 overflow-hidden">
                 <Header/>
+                { children }
             </main>
-            { children }
             </div>)
  }; 
 
