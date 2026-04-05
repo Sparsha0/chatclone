@@ -4,6 +4,8 @@
 import db from "@/lib/db"
 import { currentUser } from "@/modules/authenticaiton/actions";
 import { MessageRole, MessageType} from "@prisma/client";
+// import { success } from "better-auth/*";
+import { revalidatePath } from "next/cache";
 
 export const createChatWithMessage = async (values) =>{
     try{
@@ -85,4 +87,48 @@ export const getAllChats = async() =>{
         };
 
     }
-}
+};
+
+export const deleteChat = async(chatId) => {
+    try{
+        const user = await currentUser();
+
+        if(!user){
+            return{
+                success: false,
+                message: "Unauthorized user"
+            };
+        }
+
+        const chat = await db.chat.findUnique({
+            where:{
+                id:chatId,
+                userId:user.id
+            }
+        });
+        if(!chat){
+            return{
+                success: false,
+                message:"Chat not found"
+            };
+        }
+
+        await db.chat.delete({
+            where:{
+                id:chatId
+            }
+        });
+        revalidatePath(`/chat/${chatId}`);
+        return{
+            success: true,
+            message: "Chat deleted successfully"
+        };
+
+    } catch(error){
+        console.error("Error deleting chat:", error);
+        return{
+            success: false,
+            message: "Failed to delete chat"
+        };
+    }
+};

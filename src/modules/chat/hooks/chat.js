@@ -24,3 +24,20 @@ export const useCreateChat = () =>{
         }
     });
 };
+
+
+export const useDeleteChat = (chatId) => {
+    const queryClient = useQueryClient();
+    const router = useRouter();
+    return useMutation({
+        mutationFn:()=> deleteChat(chatId),
+        onSuccess: () =>{
+            queryClient.invalidateQueries(["chats"]);
+            router.push("/");
+        },
+        onError:() =>{
+            toast.error("Failed to delete chat");
+        },
+    });
+
+};
