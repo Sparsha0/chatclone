@@ -14,7 +14,7 @@ export const useCreateChat = () =>{
             if(res.success && res.data){
                 //add optimistic ui
                 const chat = res.data;
-                queryClient.invalidateQueries(['chats']);
+                queryClient.invalidateQueries({ queryKey: ['chats'] });
                 router.push(`/chat/${chat.id}?autoTrigger=true`)
             }
         },

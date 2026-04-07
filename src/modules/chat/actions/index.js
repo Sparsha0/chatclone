@@ -1,7 +1,7 @@
 "use server";
 
 
-import db from "@/lib/db"
+import db from "../../../lib/db"
 import { currentUser } from "@/modules/authenticaiton/actions";
 import { MessageRole, MessageType} from "@prisma/client";
 // import { success } from "better-auth/*";
@@ -87,6 +87,44 @@ export const getAllChats = async() =>{
         };
 
     }
+};
+
+export const getChatById = async (chatId) => {
+
+    const user = await currentUser();
+
+    if (!user) {
+      return {
+        success: false,
+        message: "Unauthorized user"
+      };
+    }
+
+  try {
+    const chat = await db.chat.findUnique({
+      where: {
+        id: chatId,
+        userId: user.id
+      },
+      include: {
+        messages: true
+      }
+    });
+
+    // console.log(JSON.stringify(chat , null, 2));
+    return {
+      success: true,
+      message: "Chat fetched successfully",
+      data: chat
+    };  
+    } catch (error) {
+      console.error("Error fetching chat:", error);
+      return {
+        success: false,
+        message: "Failed to fetch chat"
+      };
+    }
+
 };
 
 export const deleteChat = async(chatId) => {

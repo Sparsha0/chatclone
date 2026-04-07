@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';
 import ChatSidebar from '@/modules/chat/components/chat-sidebar';
 import { currentUser } from '@/modules/authenticaiton/actions';
+import { getAllChats } from '@/modules/chat/actions';
 import Header  from '@/modules/chat/components/header'
 
 
@@ -20,8 +21,11 @@ const layout = async({children}) =>{
             return redirect ("/sign-in")
         }
 
+        const chatsResult = await getAllChats();
+        const chats = chatsResult.success ? chatsResult.data : [];
+
         return( <div className="flex h-screen overflow-hidden">
-            <ChatSidebar user={user} chats={[]}/>
+            <ChatSidebar user={user}/>
             <main className="flex-1 overflow-hidden">
                 <Header/>
                 { children }

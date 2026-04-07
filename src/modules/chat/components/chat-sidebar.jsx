@@ -18,12 +18,24 @@ import UserButton from "@/modules/authenticaiton/components/user-button";
 
 import { PlusIcon, SearchIcon, MenuIcon, EllipsisIcon, Trash} from "lucide-react"
 import { useChatStore } from "../store/chat-store";
+import { useQuery } from "@tanstack/react-query";
 
-const ChatSidebar = ({user, chats}) =>{
+const ChatSidebar = ({user}) =>{
     const {activeChatId, setActivaeChatId} = useChatStore();
     const [isModalOpen, setIsModelOpen] = useState(false)
     const [selectedChatId, setSelectedChatId] = useState(null)
     const [searchQuery, setSearchQuery] = useState("");
+
+    // Fetch chats using React Query
+    const { data: chatsResult, isLoading } = useQuery({
+        queryKey: ["chats"],
+        queryFn: async () => {
+            const response = await fetch("/api/chat/get-chats");
+            return response.json();
+        }
+    });
+
+    const chats = chatsResult?.success ? chatsResult.data : [];
 
     const filteredChats = useMemo(()=>{
         if(!searchQuery.trim()){
