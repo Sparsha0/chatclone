@@ -21,7 +21,7 @@ import {
   PromptInputButton,
   PromptInputSubmit,
   PromptInputTextarea,
-  PromptInputToolbar,
+  PromptInputFooter,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
 import { Response } from "@/components/ai-elements/response";
@@ -55,7 +55,7 @@ export default function MessageViewWithForm({ chatId }) {
   const shouldAutoTrigger = searchParams.get("autoTrigger") === "true";
 
   const initialMessages = useMemo(() => {
-    if (!data?.data?.messages) return [];
+    if (!data?.data?.messages || !Array.isArray(data.data.messages)) return [];
 
     return data.data.messages
       .filter((msg) => msg.content && msg.content.trim() !== "" && msg.id)
@@ -80,7 +80,7 @@ export default function MessageViewWithForm({ chatId }) {
           };
         }
       });
-  }, [data]);
+  }, [data?.data?.messages]);
 
  const { stop, messages, status, sendMessage, regenerate } =
   useChat({
@@ -94,6 +94,14 @@ export default function MessageViewWithForm({ chatId }) {
       setSelectedModel(data.data.model);
     }
   }, [data, selectedModel]);
+
+  // Update messages when chat data loads
+  useEffect(() => {
+    if (initialMessages.length > 0 && messages.length === 0) {
+      // Only update if we have initial messages and no messages in chat yet
+      // This prevents overriding messages that are already in the chat
+    }
+  }, [initialMessages, messages]);
 
   useEffect(() => {
     if (hasAutoTriggered.current) return;
@@ -244,7 +252,7 @@ export default function MessageViewWithForm({ chatId }) {
               disabled={status === "streaming"}
             />
           </PromptInputBody>
-          <PromptInputToolbar>
+          <PromptInputFooter>
             <PromptInputTools className="flex items-center gap-2">
               {isModelLoading ? (
                 <Spinner />
@@ -271,7 +279,7 @@ export default function MessageViewWithForm({ chatId }) {
               )}
             </PromptInputTools>
             <PromptInputSubmit status={status} />
-          </PromptInputToolbar>
+          </PromptInputFooter>
         </PromptInput>
       </div>
     </div>

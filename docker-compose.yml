@@ -1,4 +1,4 @@
-name: t3-chat-build
+name: t3-chat
 services:
   db:
     image: postgres:latest

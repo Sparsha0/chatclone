@@ -27,18 +27,14 @@ function convertStoredMessageToUI(msg) {
     }
 
     return {
-      id: msg.id,
       role: msg.messageRole.toLowerCase(),
       parts: validParts,
-      createdAt: msg.createdAt,
     };
   } catch (e) {
 
     return {
-      id: msg.id,
       role: msg.messageRole.toLowerCase(),
       parts: [{ type: "text", text: msg.content }],
-      createdAt: msg.createdAt,
     };
   }
 }
@@ -69,8 +65,11 @@ export async function POST(req) {
       .filter(msg => msg !== null); // Remove invalid messages
 
     const normalizedNewMessages = Array.isArray(newMessages)
-      ? newMessages
-      : [newMessages];
+      ? newMessages.map(msg => ({
+          role: msg.role,
+          parts: msg.parts
+        }))
+      : [{ role: newMessages.role, parts: newMessages.parts }];
 
     console.log("📊 Previous messages:", uiMessages.length);
     console.log("📊 New messages:", normalizedNewMessages.length);
@@ -82,7 +81,12 @@ export async function POST(req) {
     // We need to ensure only valid messages are converted
     let modelMessages;
     try {
-      modelMessages = convertToModelMessages(allUIMessages);
+      // Strip extra fields that might cause issues
+      const cleanMessages = allUIMessages.map(msg => ({
+        role: msg.role,
+        parts: msg.parts
+      }));
+      modelMessages = convertToModelMessages(cleanMessages);
       console.log("✅ Converted to model messages:", modelMessages.length);
     } catch (conversionError) {
       console.error("❌ Message conversion error:", conversionError);

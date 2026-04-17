@@ -19,30 +19,9 @@ function DropdownMenuPortal({
 }
 
 function DropdownMenuTrigger({
-  asChild = false,
-  children,
   ...props
 }) {
-  if (asChild && /*#__PURE__*/React.isValidElement(children)) {
-    return (
-      <MenuPrimitive.Trigger
-        data-slot="dropdown-menu-trigger"
-        render={(triggerProps) =>
-          /*#__PURE__*/React.cloneElement(children, {
-            ...triggerProps,
-            ...children.props,
-          })
-        }
-        {...props}
-      />
-    );
-  }
-
-  return (
-    <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props}>
-      {children}
-    </MenuPrimitive.Trigger>
-  );
+  return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />;
 }
 
 function DropdownMenuContent({
