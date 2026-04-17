@@ -170,3 +170,64 @@ export const deleteChat = async(chatId) => {
         };
     }
 };
+
+export const createMessageInChat = async (values, chatId) => {
+    try {
+        const user = await currentUser();
+        if (!user) {
+            return {
+                success: false,
+                message: "Unauthorized user"
+            };
+        }
+
+        const { content, model } = values;
+
+        if (!content || !content.trim()) {
+            return { success: false, message: "Message content is required" };
+        }
+
+        // Check if chat exists and belongs to user
+        const chat = await db.chat.findUnique({
+            where: {
+                id: chatId,
+                userId: user.id
+            }
+        });
+
+        if (!chat) {
+            return {
+                success: false,
+                message: "Chat not found"
+            };
+        }
+
+        // Create user message
+        const userMessage = await db.message.create({
+            data: {
+                content,
+                messageRole: MessageRole.USER,
+                messageType: MessageType.NORMAL,
+                model,
+                chatId
+            }
+        });
+
+        // For now, return just the user message
+        // AI response can be handled separately or in the hook
+        return {
+            success: true,
+            message: "Message created successfully",
+            data: {
+                userMessage
+            }
+        };
+
+    } catch (error) {
+        console.error("Error creating message:", error);
+        return {
+            success: false,
+            message: "Failed to create message"
+        };
+    }
+};
