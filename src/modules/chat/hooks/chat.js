@@ -160,13 +160,19 @@ export const useDeleteChat = (chatId) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   return useMutation({
-    mutationFn: () => deleteChat(chatId),
+    mutationFn: async () => {
+      const res = await deleteChat(chatId);
+      if (!res.success) {
+        throw new Error(res.message || "Failed to delete chat");
+      }
+      return res;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["chats"]);
       router.push("/");
     },
-    onError: () => {
-      toast.error("Failed to delete chat");
+    onError: (error) => {
+      toast.error(error?.message || "Failed to delete chat");
     },
   });
 };

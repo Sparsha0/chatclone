@@ -101,7 +101,7 @@ export const getChatById = async (chatId) => {
     }
 
   try {
-    const chat = await db.chat.findUnique({
+    const chat = await db.chat.findFirst({
       where: {
         id: chatId,
         userId: user.id
@@ -111,7 +111,6 @@ export const getChatById = async (chatId) => {
       }
     });
 
-    // console.log(JSON.stringify(chat , null, 2));
     return {
       success: true,
       message: "Chat fetched successfully",
@@ -138,7 +137,7 @@ export const deleteChat = async(chatId) => {
             };
         }
 
-        const chat = await db.chat.findUnique({
+        const chat = await db.chat.findFirst({
             where:{
                 id:chatId,
                 userId:user.id

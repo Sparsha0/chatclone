@@ -86,7 +86,7 @@ export async function POST(req) {
         role: msg.role,
         parts: msg.parts
       }));
-      modelMessages = convertToModelMessages(cleanMessages);
+      modelMessages = await convertToModelMessages(cleanMessages);
       console.log("✅ Converted to model messages:", modelMessages.length);
     } catch (conversionError) {
       console.error("❌ Message conversion error:", conversionError);

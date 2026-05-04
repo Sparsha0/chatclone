@@ -82,9 +82,9 @@ export default function MessageViewWithForm({ chatId }) {
       });
   }, [data?.data?.messages]);
 
- const { stop, messages, status, sendMessage, regenerate } =
+ const { stop, messages, status, sendMessage, regenerate, setMessages } =
   useChat({
-    initialMessages: [],
+    initialMessages,
     api: "/api/chat",
   });
 
@@ -98,10 +98,10 @@ export default function MessageViewWithForm({ chatId }) {
   // Update messages when chat data loads
   useEffect(() => {
     if (initialMessages.length > 0 && messages.length === 0) {
-      // Only update if we have initial messages and no messages in chat yet
-      // This prevents overriding messages that are already in the chat
+      // Seed the chat state with messages loaded from the backend only once.
+      setMessages(initialMessages);
     }
-  }, [initialMessages, messages]);
+  }, [initialMessages, messages.length, setMessages]);
 
   useEffect(() => {
     if (hasAutoTriggered.current) return;
@@ -173,7 +173,7 @@ export default function MessageViewWithForm({ chatId }) {
     );
   }
 
-  const messageToRender = [...initialMessages, ...messages];
+  const messageToRender = messages;
 
 
 
