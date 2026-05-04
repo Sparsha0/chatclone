@@ -12,7 +12,14 @@ const LoginPage = () => {
     <section className="flex flex-col items-center justify-center min-h-screen bg-background  px-4 py-16 md:py-32 ">
       <div className="flex flex-row justify-center items-center gap-x-2">
         <h1 className="text-3xl font-extrabold text-foreground ">Welcome to</h1>
-        <Image src="/logo.svg" alt="logo" width={142} height={142} />
+        <Image
+          src="/logo.svg"
+          alt="logo"
+          width={142}
+          height={142}
+          priority
+          loading="eager"
+        />
       </div>
       <p className="mt-2 text-lg text-muted-foreground font-semibold">
         Sign in below (we'll increase your message limits if you do 😉)

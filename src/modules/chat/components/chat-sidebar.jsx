@@ -22,7 +22,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const ChatSidebar = ({user}) =>{
     const {activeChatId, setActivaeChatId} = useChatStore();
-    const [isModalOpen, setIsModelOpen] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedChatId, setSelectedChatId] = useState(null)
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -31,28 +31,38 @@ const ChatSidebar = ({user}) =>{
         queryKey: ["chats"],
         queryFn: async () => {
             const response = await fetch("/api/chat/get-chats");
-            return response.json();
+            const result = await response.json();
+            if (!response.ok || !result?.success) {
+                return { success: false, data: [] };
+            }
+            return result;
         }
     });
 
-    const chats = chatsResult?.success ? chatsResult.data : [];
+    const chats = chatsResult?.success && Array.isArray(chatsResult.data)
+        ? chatsResult.data
+        : [];
+
+    const safeChats = chats;
 
     const filteredChats = useMemo(()=>{
+        const baseChats = Array.isArray(safeChats) ? safeChats : [];
         if(!searchQuery.trim()){
-            return chats;
+            return baseChats;
         }
 
         const query = searchQuery.toLowerCase();
-        return chats.filter(chat=>
+        return baseChats.filter(chat=>
             chat.title?.toLowerCase().includes(query)||
             chat.messages?.some(msg=>
                 msg.content?.toLowerCase().includes(query)
             )
         );
 
-    }, [chats, searchQuery]);
+    }, [safeChats, searchQuery]);
 
     const groupedChats = useMemo(()=>{
+        const baseChats = Array.isArray(filteredChats) ? filteredChats : [];
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const yesterday = new Date(today);
@@ -68,7 +78,7 @@ const ChatSidebar = ({user}) =>{
         };
 
 
-        filteredChats.forEach(chat =>{
+        baseChats.forEach(chat =>{
             const chatDate = new Date(chat.createdAt);
 
             if(chatDate >= today){
@@ -89,7 +99,7 @@ const ChatSidebar = ({user}) =>{
         e.preventDefault();
         e.stopPropagation();
         setSelectedChatId(chatId);
-        setIsModelOpen(true);
+        setIsModalOpen(true);
     }
 
     const handleSearchChange = (e) =>{
@@ -103,9 +113,10 @@ const ChatSidebar = ({user}) =>{
 
 
     const renderChatList = (chatList) =>{
-        if(chatList.length === 0) return null;
+        const list = Array.isArray(chatList) ? chatList : [];
+        if (list.length === 0) return null;
 
-        return chatList.map((chat)=>(
+        return list.map((chat)=>(
             <Link
             key = {chat.id}
             href={`/chat/${chat.id}`}
@@ -220,14 +231,16 @@ const ChatSidebar = ({user}) =>{
         )}
       </div>
             
-            <div className="p-4 flex items-center gap-3 border-t border-sidebar-border">
+            {user && (
+              <div className="p-4 flex items-center gap-3 border-t border-sidebar-border">
                 <UserButton user={user}></UserButton>
                 <span className="flex-1 text-sm text-sidebar-foreground truncate">{user.email}</span>
-            </div>
+              </div>
+            )}
             <DeleteChatModal
             chatId={selectedChatId}
             isModalOpen={isModalOpen}
-            setIsModelOpen={setIsModelOpen}></DeleteChatModal>
+            setIsModalOpen={setIsModalOpen}></DeleteChatModal>
         </div>
     )
 }
