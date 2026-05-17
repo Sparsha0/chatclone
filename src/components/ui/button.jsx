@@ -44,14 +44,18 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  asChild = false,
   ...props
 }) {
+  const Comp = asChild ? Slot : "button"
+
   return (
-    <ButtonPrimitive
+    <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 export { Button, buttonVariants }
