@@ -7,7 +7,7 @@ import { currentUser } from '@/modules/authenticaiton/actions';
 import { getAllChats } from '@/modules/chat/actions';
 import Header  from '@/modules/chat/components/header'
 
-
+export const dynamic = "force-dynamic";
 
 
 const layout = async({children}) =>{

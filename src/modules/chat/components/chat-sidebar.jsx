@@ -165,13 +165,12 @@ const ChatSidebar = ({user}) =>{
                 </div>
             </div>
             <div className="p-4">
-                <Link href={"/"}>
-                    <Button className={"w-full"}>
-                        <PlusIcon className="mr-2 h-4 w-4">
-                        </PlusIcon>
-                        New Chat
-                    </Button>
-                </Link>
+                <Button asChild className="w-full">
+                    <Link href={"/"}>
+                        <PlusIcon className="mr-2 h-4 w-4" />
+                            New Chat
+                    </Link>
+                </Button>
             </div>
             <div className="p-4 pb-4">
                 <div className="relative">
