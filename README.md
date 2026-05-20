@@ -1,4 +1,4 @@
-# T3 Chat Clone
+# Smart AI Chat Bot
 
 A modern AI chat application inspired by T3.chat, built with Next.js, React, and TypeScript.  
 This project provides a clean conversational UI powered by a custom AI system prompt focused on developer assistance, contextual reasoning, and structured responses.
@@ -7,7 +7,7 @@ This project provides a clean conversational UI powered by a custom AI system pr
 
 ## Live Demo
 
-🌐 **Production App:** https://casecraft-ashy.vercel.app/
+🌐 **Production App:** https://smataichatbot.vercel.app
 
 ## Features
 
@@ -27,6 +27,6 @@ This project provides a clean conversational UI powered by a custom AI system pr
 
 - Next.js
 - React
-- Javascript
+- Typescript
 - Tailwind CSS
 - OpenAI API
