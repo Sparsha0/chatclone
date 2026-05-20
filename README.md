@@ -5,6 +5,10 @@ This project provides a clean conversational UI powered by a custom AI system pr
 
 ---
 
+## Live Demo
+
+🌐 **Production App:** https://casecraft-ashy.vercel.app/
+
 ## Features
 
 - ✨ Modern chat interface
