@@ -159,9 +159,10 @@ const ChatSidebar = ({user}) =>{
                     <Image
                     src={"/logo.svg"}
                     alt="Logo"
-                    width={100}
-                    height={100}
+                    width={50}
+                    height={30}
                     ></Image>
+                    <p>Smart Ai chatBot</p>
                 </div>
             </div>
             <div className="p-4">
