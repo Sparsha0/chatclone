@@ -25,6 +25,7 @@ const ChatSidebar = ({user}) =>{
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedChatId, setSelectedChatId] = useState(null)
     const [searchQuery, setSearchQuery] = useState("");
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
     // Fetch chats using React Query
     const { data: chatsResult, isLoading } = useQuery({
@@ -153,18 +154,33 @@ const ChatSidebar = ({user}) =>{
         ))
     }
     return(
-        <div className="flex h-full w-64 flex-col border-r border-border bg-sidebar">
-            <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-3">
+        <div className="flex h-screen">
+        <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+             //className="md:hidden"
+        >
+            <MenuIcon className="h-5 w-5" />
+        </Button>
+       <div
+    className={cn(
+        "bg-sidebar border-r border-border transition-all duration-300 overflow-hidden flex flex-col",
+        sidebarOpen ? "w-64" : "w-0"
+    )}
+>
+            {/* <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-3">
                 <div className="flex items-center gap-2">
                     <Image
                     src={"/logo.svg"}
                     alt="Logo"
-                    width={50}
-                    height={30}
+                    width={31}
+                    height={10}
                     ></Image>
                     <p>Smart Ai chatBot</p>
+                  
                 </div>
-            </div>
+            </div> */}
             <div className="p-4">
                 <Button asChild className="w-full">
                     <Link href={"/"}>
@@ -232,15 +248,16 @@ const ChatSidebar = ({user}) =>{
       </div>
             
             {user && (
-              <div className="p-4 flex items-center gap-3 border-t border-sidebar-border">
+              <div className="p-3 flex items-center gap-2 border-t border-sidebar-border">
                 <UserButton user={user}></UserButton>
-                <span className="flex-1 text-sm text-sidebar-foreground truncate">{user.email}</span>
+                <span className="flex-1 text-sm text-sidebar-foreground truncate">{user.name}</span>
               </div>
             )}
             <DeleteChatModal
             chatId={selectedChatId}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}></DeleteChatModal>
+        </div>
         </div>
     )
 }
