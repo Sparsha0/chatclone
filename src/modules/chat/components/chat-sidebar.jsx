@@ -164,12 +164,12 @@ const ChatSidebar = ({user}) =>{
             <MenuIcon className="h-5 w-5" />
         </Button>
        <div
-    className={cn(
-        "bg-sidebar border-r border-border transition-all duration-300 overflow-hidden flex flex-col",
-        sidebarOpen ? "w-64" : "w-0"
-    )}
+  className={cn(
+    "bg-zinc-870 border-r border-zinc-750/80 transition-all duration-300 overflow-hidden flex flex-col shadow-xl",
+    sidebarOpen ? "w-72" : "w-0"
+  )}
 >
-            {/* <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-3">
+            <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-3">
                 <div className="flex items-center gap-2">
                     <Image
                     src={"/logo.svg"}
@@ -180,7 +180,7 @@ const ChatSidebar = ({user}) =>{
                     <p>Smart Ai chatBot</p>
                   
                 </div>
-            </div> */}
+            </div>
             <div className="p-4">
                 <Button asChild className="w-full">
                     <Link href={"/"}>
